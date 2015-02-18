@@ -3,23 +3,26 @@ var plugins = require("gulp-load-plugins")({
     pattern: ['gulp-*', 'gulp.*', 'main-bower-files'],
     replaceString: /\bgulp[\-.]/
 });
+var appName = 'AppName';
 
 var final = {
-    appJs: 'AppName.min.js',
-    appCss: 'AppName.min.css',
-    vendorJs: 'plugins.min.js',
+    appJs: appName + '.min.js',
+    appCss: appName + '.min.css',
+    vendorScripts: 'plugins.min.js',
     vendorCss: 'plugins.min.css'
 };
 
 var paths = {
-    scripts: plugins.mainBowerFiles({
+    vendorScripts: plugins.mainBowerFiles({
         base: 'bower_components',
         filter: /.*\.js$/i
-    }).concat(['js/**/*.js']),
-    scss: plugins.mainBowerFiles({
+    }),
+    vendorCss: plugins.mainBowerFiles({
         base: 'bower_components',
-        filter: /.*\.css/i
-    }).concat(['scss/**/*.scss']),
+        filter: /.*\.css$/i
+    }),
+    appScripts: ['js/**/*.js'],
+    appCss: ['scss/**/*.scss'],
     build: './build'
 };
 
@@ -37,7 +40,7 @@ gulp.task('html', function () {
 });
 
 gulp.task('scripts', function () {
-    return gulp.src(paths.scripts)
+    return gulp.src(paths.appScripts)
         .pipe(plugins.sourcemaps.init())
         .pipe(plugins.uglify())
         .pipe(plugins.concat(final.appJs))
@@ -47,10 +50,10 @@ gulp.task('scripts', function () {
 });
 
 gulp.task('css', function () {
-    return gulp.src(paths.scss)
+    return gulp.src(paths.appCss)
         .pipe(plugins.sourcemaps.init())
-        .pipe(plugins.concat(final.appCss))
         .pipe(plugins.sass())
+        .pipe(plugins.concat(final.appCss))
         .pipe(plugins.autoprefixer({
             browsers: ['> 1%', 'last 2 versions'],
             cascade: false
@@ -61,10 +64,32 @@ gulp.task('css', function () {
         .pipe(plugins.connect.reload());
 });
 
-gulp.task('watch', ['webserver'], function () {
-    gulp.watch('index.html', ['html']);
-    gulp.watch(paths.scripts, ['scripts']);
-    gulp.watch(paths.scss, ['css']);
+gulp.task('vendorScripts', function() {
+    return gulp.src(paths.vendorScripts)
+        .pipe(plugins.sourcemaps.init())
+        .pipe(plugins.uglify())
+        .pipe(plugins.concat(final.vendorScripts))
+        .pipe(plugins.sourcemaps.write())
+        .pipe(gulp.dest(paths.build))
+        .pipe(plugins.connect.reload());
 });
 
-gulp.task('default', ['watch', 'scripts', 'css']);
+gulp.task('vendorCss', function() {
+    return gulp.src(paths.vendorCss)
+        .pipe(plugins.sourcemaps.init())
+        .pipe(plugins.concat(final.vendorCss))
+        .pipe(plugins.minifyCss())
+        .pipe(plugins.sourcemaps.write())
+        .pipe(gulp.dest(paths.build))
+        .pipe(plugins.connect.reload());
+});
+
+gulp.task('watch', ['webserver'], function () {
+    gulp.watch('index.html', ['html']);
+    gulp.watch(paths.appScripts, ['scripts']);
+    gulp.watch(paths.appCss, ['css']);
+    gulp.watch(paths.vendorScripts, ['vendorScripts']);
+    gulp.watch(paths.vendorCss, ['vendorCss']);
+});
+
+gulp.task('default', ['watch', 'vendorScripts', 'vendorCss', 'scripts', 'css']);
