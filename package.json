@@ -1,0 +1,32 @@
+{
+  "name": "topos",
+  "version": "1.0.0",
+  "description": "workflow-basic-gulp",
+  "main": "index.html",
+  "dependencies": {
+    "gulp": "^3.8.11",
+    "gulp-autoprefixer": "^2.1.0",
+    "gulp-concat": "^2.5.0",
+    "gulp-connect": "^2.2.0",
+    "gulp-load-plugins": "^0.8.0",
+    "gulp-minify-css": "^0.4.5",
+    "gulp-sass": "^1.3.3",
+    "gulp-sourcemaps": "^1.3.0",
+    "gulp-uglify": "^1.1.0",
+    "main-bower-files": "^2.5.0",
+    "order": "^0.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kaseOga/workflow-basic-gulp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kaseOga/workflow-basic-gulp/issues"
+  },
+  "homepage": "https://github.com/kaseOga/workflow-basic-gulp"
+}
