@@ -17,7 +17,6 @@ var paths = {
         filter: /.*\.js$/i
     }).concat(['js/**/*.js']),
     scss: plugins.mainBowerFiles({
-        debugging: true,
         base: 'bower_components',
         filter: /.*\.css/i
     }).concat(['scss/**/*.scss']),
